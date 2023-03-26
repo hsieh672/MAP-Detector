@@ -1,6 +1,6 @@
 # MAP-detector-
 Implement the Maximum A Posteriori  probability (MAP) of the classifier for 60 instances of 3 types wines with 13 different features.  
-Information of each feature: 
+#### Information of each feature: 
 1. Alcohol  
 2. Malic acid  
 3. Ash  
@@ -15,6 +15,7 @@ Information of each feature:
 12. OD280/OD315 of diluted wines   
 13. Proline  
 ##  Split the testing and training data
+[data](https://archive.ics.uci.edu/ml/datasets/Wine)
 ```sh
 train_num = 484
 test_num = 20
