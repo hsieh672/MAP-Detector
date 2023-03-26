@@ -1,4 +1,4 @@
-# MAP-detector-
+# MAP-detector
 Implement the Maximum A Posteriori  probability (MAP) of the classifier for 60 instances of 3 types wines with 13 different features.  
 #### Information of each feature: 
 1. Alcohol  
@@ -44,3 +44,4 @@ test_type[1] = [random.randint(count_type[0] + 1,count_type[0] + count_type[1])f
 test_type[2] = [random.randint(count_type[0] + count_type[1] + 1,
                                count_type[0] + count_type[1] + count_type[2])for _ in range(test_num)]
 ```
+![PCA-2D](https://user-images.githubusercontent.com/75994180/227760603-8f23d427-455c-4edf-a7b2-5a1ec844c84e.png)
