@@ -102,4 +102,90 @@ for i in range(type_num):
     prior[i] = count_type[i] / train_num
 print(prior)
 ```
-![PCA-2D](https://user-images.githubusercontent.com/75994180/227760603-8f23d427-455c-4edf-a7b2-5a1ec844c84e.png)
+
+In this section, I need to categorize each category. There have 60 testing data and I need to calculate the posterior of every testing data and then find out the biggest number of the posterior.  
+At first, I multiplied the posterior and the prior of each type. The equation is 𝑃(𝑐|𝑋) = 1 ∗ 𝑃(𝑐)  
+I used the variable “feauture_mean_i” and “feauture_std_i” to obtain the pdf of the Gaussian distribution. The likelihood of each testing data would be integrated by the following equation and then obtain the posterior, the integral interval I set is 𝑑𝑒𝑙𝑡𝑎 = 10−3:  
+![likelihood](https://user-images.githubusercontent.com/75994180/227760881-6c413138-a918-42f1-97ca-761f9b2f0988.png)  
+Finally, I would find out the biggest posterior of each type then sort the testing data to that type which has the biggest posterior  
+```sh
+# calculate multiplication of likelihood and prior probability
+delta = 1e-3
+post = [0.,0.,0.]
+post_0 = ([1.]*(test_num*type_num))
+post_1 = ([1.]*(test_num*type_num))
+post_2 = ([1.]*(test_num*type_num))
+label = ([0]*(test_num*type_num))
+
+
+for i in range(test_num*type_num):
+    post_0[i] = post_0[i] * prior[0]
+    post_1[i] = post_1[i] * prior[1]
+    post_2[i] = post_2[i] * prior[2]
+    for j in range(csvReader.shape[1]-1):
+        distribution_0 = st.norm(feature_mean_0[j],feature_std_0[j])
+        distribution_1 = st.norm(feature_mean_1[j],feature_std_1[j])
+        distribution_2 = st.norm(feature_mean_2[j],feature_std_2[j])
+        likelihood_0 = integrate.quad(distribution_0.pdf,data_feature_test[i][j], data_feature_test[i][j]+delta)
+        likelihood_1 = integrate.quad(distribution_1.pdf,data_feature_test[i][j], data_feature_test[i][j]+delta)
+        likelihood_2 = integrate.quad(distribution_2.pdf,data_feature_test[i][j], data_feature_test[i][j]+delta)
+        post_0[i] = likelihood_0[0] * post_0[i]
+        post_1[i] = likelihood_1[0] * post_1[i]
+        post_2[i] = likelihood_2[0] * post_2[i]
+    post = [post_0[i],post_1[i],post_2[i]]
+    label[i] = np.argmax(post)
+
+```
+I compared the original data type and the data type I used the MAP detection to obtain to calculate the total number of correction.  
+```sh
+# calculate the accuracy rate of MAP detection
+correct = 0
+
+for i in range(test_num*type_num):
+    if label[i] == data_test[i][0]:
+         correct += 1
+    accuracy = correct / (test_num*type_num)
+print('accuracy use all features in ML: ',accuracy)
+```
+### Accuracy = 0.9666666667  
+## Plot the visualized result of testing data
+PCA is a way for analyzing large datasets containing a high number of dimensions or features per observation. In this HW, the training data have 423*13 dimensions. When the dimensions of the datasets are large, we need to reduce the dimensions to avoid overfitting.  
+We need to use PCA to reduce the dimensions, find out the principal features of the data and use these data to classify the three types. 
+
+```sh
+# plot the visualized result of testing data
+PCA2 = PCA(n_components=2)
+PCA3 = PCA(n_components=3)
+x2 = PCA2.fit(data_feature).transform(data_feature)
+x3 = PCA3.fit(data_feature).transform(data_feature)
+y = data_train[:,0]
+
+markers = ['v', 's', 'o']
+wines = ['type 0', 'type 1', 'type 2']
+labels = [0., 1., 2.]
+
+# plot 2D
+for c, i, target_name, m in zip('rgb', labels, wines, markers):
+    plt.scatter(x2[y==i, 0], x2[y==i, 1], c=c, label=target_name, marker=m)
+plt.xlabel('PCA-feature-1')
+plt.ylabel('PCA-feature-2')
+plt.legend(wines ,loc='upper right')
+plt.savefig('C:/Users/88697/Desktop/NTHU/ML/HW1/PCA-2D.png')
+
+plt.clf()
+
+#plot 3D
+plt3 = plt.axes(projection='3d')
+for c, i, target_name, m in zip('rgb', labels, wines, markers):
+    plt3.scatter(x3[y==i, 0], x3[y==i, 1],x3[y==i, 2], c=c, label=target_name, marker=m)
+plt3.set_xlabel('PCA-feature-1')
+plt3.set_ylabel('PCA-feature-2')
+plt3.set_zlabel('PCA-feature-3')
+plt.legend(wines ,loc='upper right')
+plt.savefig('C:/Users/88697/Desktop/NTHU/ML/HW1/PCA-3D.png')
+```
+![PCA-2D](https://user-images.githubusercontent.com/75994180/227760603-8f23d427-455c-4edf-a7b2-5a1ec844c84e.png)  
+![PCA-3D](https://user-images.githubusercontent.com/75994180/227760980-6f4a1e14-3726-4258-84c0-71bf2273020a.png)  
+[PCA2_components.csv](https://github.com/hsieh672/MAP-detector/files/11070988/PCA2_components.csv)  
+[PCA3_components.csv](https://github.com/hsieh672/MAP-detector/files/11070989/PCA3_components.csv)  
+
