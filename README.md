@@ -190,4 +190,4 @@ plt.savefig('C:/Users/88697/Desktop/NTHU/ML/HW1/PCA-3D.png')
 [PCA3_components.csv](https://github.com/hsieh672/MAP-detector/files/11070989/PCA3_components.csv)  
 
 Use the 4th, 5th and 13th features to MAP detector then predict the type of wine and calculate the accuracy rate.  
-## Accuracy = 0.766666666667
+### Accuracy = 0.766666666667
