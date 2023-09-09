@@ -63,7 +63,7 @@ data_feature_test = np.delete(data_test, 0, 1)
 ![MAP](https://user-images.githubusercontent.com/75994180/227760788-8126c56d-3a0a-4868-8261-b80e4ac6bfb3.png)  
 The above equation would calculate the posterior probability. We know that 𝑃(𝑐|𝑋) ∝ 𝑃(𝑥|𝑐) ∗ 𝑃(𝑐), so I only need to calculate the likelihood and the class prior probability.  
 
-When calculating posterior probabilities, I need to calculate the mean and steach feature's deviation. I use "data_train_0", "data_train_1" and "data_train_2" to save the training data of each type.  
+When calculating posterior probabilities, I need to calculate the mean and Steach feature's deviation. I use "data_train_0", "data_train_1" and "data_train_2" to save the training data of each type.  
 "`sh
 # Split the training data based on their features
 data_train_0 = ([[0]*(csvReader.shape[1]-1) for i in range(count_type[0])])
@@ -95,7 +95,7 @@ feature_std_1 = np.std(data_train_1,axis = 0)
 feature_std_2 = np.std(data_train_2,axis = 0)
 ```
 The prior probabilities of each type are [type0, type1, type2] = [0.362, 0.424, 0.214]  
-"`sh
+```sh
 # Calculate prior probability
 prior = [0.,0.,0.]
 for i in range(type_num):
