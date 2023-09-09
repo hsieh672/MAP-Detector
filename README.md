@@ -29,9 +29,9 @@ with open(fn) as CSV file :
 data = np.array(csvReader)
 print(data)
 ```
-The variable “count_type” counts the total number of each type. The different kinds are [type 0, 1, type2] = [175, 205, 103]. The variable “test_type[i]” records 20 randomly generated numbers for each kind.  
+The variable "count_type" counts the total number of each type. The different kinds are [type 0, 1, type2] = [175, 205, 103]. The variable "test_type[i]" records 20 randomly generated numbers for each kind.  
 
-```sh
+"`sh
 # Count the number of different types
 count_type = [0,0,0]
 for i in range(1,csvReader.shape[0]):
@@ -48,9 +48,9 @@ test_type[1] = [random.randint(count_type[0] + 1,count_type[0] + count_type[1])f
 test_type[2] = [random.randint(count_type[0] + count_type[1] + 1,
                                count_type[0] + count_type[1] + count_type[2])for _ in range(test_num)]
 ```
-Because I don’t need to use the label to calculate the posterior probabilities, I use the variables “data_feature” and “data_feature_test” to save the training and testing data which delete the first column of “data_train” and “data_test” separately. I thought this section might be redundant because I actually only need to skip the first column in the calculation to achieve.  
+Because I don't need to use the label to calculate the posterior probabilities, I use the variables "data_feature" and "data_feature_test" to save the training and testing data, which delete the first column of "data_train" and "data_test" separately. I thought this section might be redundant because I only need to skip the first column in the calculation to achieve.  
 
-```sh
+"`sh
 # Delete the label of the input data
 data_train = np.array(data_train)
 data_train = np.asarray(data_train, dtype=float)
@@ -61,10 +61,10 @@ data_feature_test = np.delete(data_test, 0, 1)
 ```
 ## Using MAP detector to predict the testing data
 ![MAP](https://user-images.githubusercontent.com/75994180/227760788-8126c56d-3a0a-4868-8261-b80e4ac6bfb3.png)  
-The posterior probability would be calculated by the above equation. We know that 𝑃(𝑐|𝑋) ∝ 𝑃(𝑥|𝑐) ∗ 𝑃(𝑐), so I only need to calculate the likelihood and the class prior probability.  
+The above equation would calculate the posterior probability. We know that 𝑃(𝑐|𝑋) ∝ 𝑃(𝑥|𝑐) ∗ 𝑃(𝑐), so I only need to calculate the likelihood and the class prior probability.  
 
-When calculating posterior probabilities, I need to calculate the mean and standard deviation of each feature. I use “data_train_0”, “data_train_1” and “data_train_2” to save the training data of each type.  
-```sh
+When calculating posterior probabilities, I need to calculate the mean and steach feature's deviation. I use "data_train_0", "data_train_1" and "data_train_2" to save the training data of each type.  
+"`sh
 # Split the training data based on their features
 data_train_0 = ([[0]*(csvReader.shape[1]-1) for i in range(count_type[0])])
 data_train_1 = [[0]*(csvReader.shape[1]-1) for i in range(count_type[1])]
@@ -77,8 +77,8 @@ for i in range(0,count_type[1]):
 for i in range(0,count_type[2]):
     data_train_2[i] = data_feature[count_type[0] + count_type[1] + i]
 ```
-I use “feature_mean_i” and “feature_std_i” to save the mean and standard deviation of the ith type.  
-```sh
+I use "feature_mean_i" and "feature_std_i" to save the mean and standard deviation of the ith type.  
+"`sh
 # Calculate the mean and std of each feature
 feature_mean_0 = [[0]*(csvReader.shape[1]-1)]
 feature_mean_1 = [[0]*(csvReader.shape[1]-1)]
@@ -95,7 +95,7 @@ feature_std_1 = np.std(data_train_1,axis = 0)
 feature_std_2 = np.std(data_train_2,axis = 0)
 ```
 The prior probabilities of each type are [type0, type1, type2] = [0.362, 0.424, 0.214]  
-```sh
+"`sh
 # Calculate prior probability
 prior = [0.,0.,0.]
 for i in range(type_num):
@@ -103,7 +103,7 @@ for i in range(type_num):
 print(prior)
 ```
 
-In this section, I need to categorize each category. There are 60 testing data, and I need to calculate the posterior of every testing data and then find out the biggest number of the posterior.  
+In this section, I need to categorize each category. There are 60 testing data, and I need to calculate the posterior of every testing data and then find out the most significant number of the posterior.  
 At first, I multiplied the posterior and the prior of each type. The equation is 𝑃(𝑐|𝑋) = 1 ∗ 𝑃(𝑐)  
 I used the variable “feauture_mean_i” and “feauture_std_i” to obtain the pdf of the Gaussian distribution. The likelihood of each testing data would be integrated by the following equation and then obtain the posterior, the integral interval I set is 𝑑𝑒𝑙𝑡𝑎 = 10−3:  
 ![likelihood](https://user-images.githubusercontent.com/75994180/227760881-6c413138-a918-42f1-97ca-761f9b2f0988.png)  
@@ -149,7 +149,7 @@ print('accuracy use all features in ML: ',accuracy)
 ```
 ### Accuracy = 0.9666666667  
 ## Plot the visualized result of testing data
-PCA is a way of analyzing large datasets containing a high number of dimensions or features per observation. In this HW, the training data have 423*13 dimensions. When the dimensions of the datasets are large, we need to reduce the dimensions to avoid overfitting.  
+PCA is a way of analyzing large datasets containing many dimensions or features per observation. In this HW, the training data have 423*13 measurements. When the sizes of the datasets are significant, we need to reduce the dimensions to avoid overfitting.  
 We need to use PCA to reduce the dimensions, find out the principal features of the data, and use these data to classify the three types. 
 
 ```sh
@@ -160,7 +160,7 @@ x2 = PCA2.fit(data_feature).transform(data_feature)
 x3 = PCA3.fit(data_feature).transform(data_feature)
 y = data_train[:,0]
 
-markers = ['v', 's', 'o']
+markers = ['v,' 's,' 'o']
 wines = ['type 0', 'type 1', 'type 2']
 labels = [0., 1., 2.]
 
@@ -189,5 +189,5 @@ plt.savefig('C:/Users/88697/Desktop/NTHU/ML/HW1/PCA-3D.png')
 [PCA2_components.csv](https://github.com/hsieh672/MAP-detector/files/11070988/PCA2_components.csv)  
 [PCA3_components.csv](https://github.com/hsieh672/MAP-detector/files/11070989/PCA3_components.csv)  
 
-Use the 4th, 5th and 13th features to MAP detector then predict the type of wine and calculate the accuracy rate.  
+Use the 4th, 5th, and 13th features to MAP detector, then predict the type of wine and calculate the accuracy rate.  
 ### Accuracy = 0.766666666667
